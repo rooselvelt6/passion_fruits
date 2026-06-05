@@ -1568,7 +1568,7 @@ function buildParchitaLayers() {
     return new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), mat);
   }
 
-  const skin = makeLayer(LAYER_RADII.skin, 0x7B3FAF, 0x2A1040, 0.4);
+  const skin = makeLayer(LAYER_RADII.skin, 0xE8B830, 0x8B6A00, 0.45);
   const pith = makeLayer(LAYER_RADII.pith, 0xFFF8E7, 0x000000, 0.6);
   const pulp = makeLayer(LAYER_RADII.pulp, 0xF5A623, 0x8B5E00, 0.5);
 

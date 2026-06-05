@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Outer skin (cut in half - outer ring) -->
-  <path d="M50 4C26 4 7 20 5 40c-1 12 3 24 12 33c9 9 22 14 33 14c11 0 21-4 29-11c8-7 14-18 16-30c2-12-2-25-11-35C71 11 61 4 50 4z" fill="#5C2D91"/>
-  <path d="M50 8C28 8 11 23 9 41c-1 11 3 22 11 30c8 8 19 12 30 12c11 0 19-4 26-10c7-6 12-16 14-27c2-11-1-23-10-32C67 14 58 8 50 8z" fill="#7B3FAF"/>
+  <!-- Outer skin (cut in half - outer ring) Yellow passion fruit -->
+  <path d="M50 4C26 4 7 20 5 40c-1 12 3 24 12 33c9 9 22 14 33 14c11 0 21-4 29-11c8-7 14-18 16-30c2-12-2-25-11-35C71 11 61 4 50 4z" fill="#D4A017"/>
+  <path d="M50 8C28 8 11 23 9 41c-1 11 3 22 11 30c8 8 19 12 30 12c11 0 19-4 26-10c7-6 12-16 14-27c2-11-1-23-10-32C67 14 58 8 50 8z" fill="#E8B830"/>
   <!-- Cut cross-section interior area -->
   <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFF8E7"/>
   <!-- Pith inner ring -->
