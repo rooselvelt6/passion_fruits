@@ -1,3 +1,37 @@
+/* ======================== PARCHITA ICON ======================== */
+function parchitaSvg(size = 18) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${size}" height="${size}" style="vertical-align:middle">
+    <path d="M50 4C26 4 7 20 5 40c-1 12 3 24 12 33c9 9 22 14 33 14c11 0 21-4 29-11c8-7 14-18 16-30c2-12-2-25-11-35C71 11 61 4 50 4z" fill="#5C2D91"/>
+    <path d="M50 8C28 8 11 23 9 41c-1 11 3 22 11 30c8 8 19 12 30 12c11 0 19-4 26-10c7-6 12-16 14-27c2-11-1-23-10-32C67 14 58 8 50 8z" fill="#7B3FAF"/>
+    <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFF8E7"/>
+    <ellipse cx="50" cy="50" rx="29" ry="27" fill="#FFF3D6"/>
+    <ellipse cx="50" cy="50" rx="26" ry="24" fill="#F5A623"/>
+    <ellipse cx="50" cy="50" rx="24" ry="22" fill="#F7C948"/>
+    <ellipse cx="50" cy="50" rx="22" ry="20" fill="#FADB6A"/>
+    <ellipse cx="42" cy="42" rx="4" ry="2.8" fill="#1A1A1A" transform="rotate(-25 42 42)"/>
+    <ellipse cx="55" cy="41" rx="4" ry="2.8" fill="#1A1A1A" transform="rotate(20 55 41)"/>
+    <ellipse cx="48" cy="52" rx="4" ry="2.8" fill="#1A1A1A" transform="rotate(-10 48 52)"/>
+    <ellipse cx="60" cy="50" rx="4" ry="2.8" fill="#1A1A1A" transform="rotate(30 60 50)"/>
+    <ellipse cx="36" cy="50" rx="3.5" ry="2.5" fill="#1A1A1A" transform="rotate(-40 36 50)"/>
+    <ellipse cx="52" cy="60" rx="3.5" ry="2.5" fill="#1A1A1A" transform="rotate(15 52 60)"/>
+    <ellipse cx="43" cy="58" rx="3.5" ry="2.5" fill="#1A1A1A" transform="rotate(-15 43 58)"/>
+    <ellipse cx="62" cy="57" rx="3.5" ry="2.3" fill="#1A1A1A" transform="rotate(35 62 57)"/>
+    <ellipse cx="38" cy="57" rx="3" ry="2.2" fill="#1A1A1A" transform="rotate(-30 38 57)"/>
+    <ellipse cx="56" cy="47" rx="3.5" ry="2.5" fill="#1A1A1A" transform="rotate(5 56 47)"/>
+    <ellipse cx="42" cy="42" rx="5.5" ry="3.8" fill="rgba(255,220,80,0.2)" transform="rotate(-25 42 42)"/>
+    <ellipse cx="55" cy="41" rx="5.5" ry="3.8" fill="rgba(255,220,80,0.2)" transform="rotate(20 55 41)"/>
+    <ellipse cx="48" cy="52" rx="5.5" ry="3.8" fill="rgba(255,220,80,0.2)" transform="rotate(-10 48 52)"/>
+    <ellipse cx="60" cy="50" rx="5.5" ry="3.8" fill="rgba(255,220,80,0.2)" transform="rotate(30 60 50)"/>
+    <ellipse cx="52" cy="60" rx="5" ry="3.5" fill="rgba(255,220,80,0.2)" transform="rotate(15 52 60)"/>
+    <path d="M48 3C48 1 49 0 50 0c1 0 2 1 2 3v6c0 2-1 3-2 3c-1 0-2-1-2-3V3z" fill="#5D4037"/>
+    <path d="M52 4c3-2 7-3 10-1c3 2 4 5 2 8c-2 2-5 1-7-1c-2-2-6-3-5-6z" fill="#4CAF50"/>
+    <path d="M52 4c2-1 5-2 8-1c2 1 3 3 2 5c-1 2-3 2-5 1c-2-1-4-2-5-5z" fill="#388E3C"/>
+    <ellipse cx="41" cy="41" rx="1.5" ry="0.8" fill="rgba(255,255,255,0.15)" transform="rotate(-25 41 41)"/>
+    <ellipse cx="54" cy="40" rx="1.5" ry="0.8" fill="rgba(255,255,255,0.15)" transform="rotate(20 54 40)"/>
+    <ellipse cx="47" cy="51" rx="1.5" ry="0.8" fill="rgba(255,255,255,0.15)" transform="rotate(-10 47 51)"/>
+  </svg>`;
+}
+
 /* ======================== STATE ======================== */
 const DEFAULT_STATE = {
   ingredientes: {
@@ -262,6 +296,9 @@ function switchTab(tab) {
   if (navItem) navItem.classList.add('active');
   renderAll();
   if (window.innerWidth <= 768) toggleSidebar(false);
+  if (tab === 'parchita3d') {
+    setTimeout(() => initParchita3D(), 100);
+  }
 }
 
 function toggleSidebar(force) {
@@ -529,7 +566,7 @@ function renderCalculadora() {
   const bd = $('cost-breakdown');
   const icn = (fa, style) => `<i class="fas fa-${fa}" style="width:16px;text-align:center;${style||''}"></i>`;
   bd.innerHTML = `
-    <div class="flex justify-between"><span>${icn('apple-alt','color:#E8A137')} Parchita (${state.ingredientes.parchita.kg}kg)</span><span>$${calc.costIngredientes.parchita.toFixed(2)}</span></div>
+    <div class="flex justify-between"><span>${parchitaSvg(16)} Parchita (${state.ingredientes.parchita.kg}kg)</span><span>$${calc.costIngredientes.parchita.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('cube','color:#D4A853')} Azúcar (${state.ingredientes.azucar.kg}kg)</span><span>$${calc.costIngredientes.azucar.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('tint','color:#4A90D9')} Agua (${state.ingredientes.agua.L}L)</span><span>$${calc.costIngredientes.agua.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('flask','color:#8B5CF6')} Pectina (${state.ingredientes.pectina.g}g)</span><span>$${calc.costIngredientes.pectina.toFixed(2)}</span></div>
@@ -631,7 +668,7 @@ function renderProductos() {
         </div>
       </div>
       <div class="text-xs text-secondary mt-2 space-y-0.5">
-        <div><i class="fas fa-apple-alt" style="color:#E8A137;width:14px"></i> ${safeNumber(p.parchita,0)}kg · <i class="fas fa-cube" style="color:#D4A853;width:14px"></i> ${safeNumber(p.azucar,0)}kg · <i class="fas fa-tint" style="color:#4A90D9;width:14px"></i> ${safeNumber(p.agua,0)}L</div>
+        <div>${parchitaSvg(14)} ${safeNumber(p.parchita,0)}kg · <i class="fas fa-cube" style="color:#D4A853;width:14px"></i> ${safeNumber(p.azucar,0)}kg · <i class="fas fa-tint" style="color:#4A90D9;width:14px"></i> ${safeNumber(p.agua,0)}L</div>
         <div><i class="fas fa-flask" style="color:#8B5CF6;width:14px"></i> ${safeNumber(p.pectina,0)}g · <i class="fas fa-vial" style="color:#F59E0B;width:14px"></i> ${safeNumber(p.acido_citrico,0)}g ácido</div>
       </div>
       <div class="mt-2 flex gap-1">
@@ -1008,7 +1045,7 @@ function calcularEscalado() {
     <div class="mt-2 space-y-1 p-3 bg-amber-50 rounded-xl border border-subtle">
       <div class="text-xs text-secondary mb-1">Para obtener <strong>${targetL.toFixed(1)}L</strong> (factor: ${factor.toFixed(3)}x):</div>
       <div class="grid grid-cols-2 gap-x-4 gap-y-0.5 text-sm">
-        <span><i class="fas fa-apple-alt" style="color:#E8A137;width:16px"></i> Parchita</span><span class="font-semibold text-right">${scaled.parchita.toFixed(1)} kg</span>
+        <span>${parchitaSvg(16)} Parchita</span><span class="font-semibold text-right">${scaled.parchita.toFixed(1)} kg</span>
         <span><i class="fas fa-cube" style="color:#D4A853;width:16px"></i> Azúcar</span><span class="font-semibold text-right">${scaled.azucar.toFixed(1)} kg</span>
         <span><i class="fas fa-tint" style="color:#4A90D9;width:16px"></i> Agua</span><span class="font-semibold text-right">${scaled.agua.toFixed(1)} L</span>
         <span><i class="fas fa-flask" style="color:#8B5CF6;width:16px"></i> Pectina</span><span class="font-semibold text-right">${scaled.pectina.toFixed(0)} g</span>
@@ -1195,7 +1232,7 @@ function exportPDF() {
   content.style.fontFamily = 'Outfit, sans-serif';
   content.style.color = '#2C1810';
   content.innerHTML = `
-    <h1 style="font-size:20px;font-weight:700;color:#F4A100;"><i class="fas fa-apple-alt"></i> Sirope de Parchita — Historial de Costos</h1>
+    <h1 style="font-size:20px;font-weight:700;color:#F4A100;">${parchitaSvg(22)} Sirope de Parchita — Historial de Costos</h1>
     <p style="font-size:12px;color:#7A5C4A;margin-bottom:16px;">Generado: ${new Date().toLocaleString('es-ES')}</p>
     <table style="width:100%;border-collapse:collapse;font-size:11px;">
       <thead>
@@ -1233,7 +1270,7 @@ function exportPDF() {
 // ======================== SLIDER INIT ========================
 function initSliders() {
   const configs = [
-    { key: 'ingredientes.parchita.kg', max: 500, step: 0.1, label: 'Parchita amarilla', unit: 'kg', icon: '<i class="fas fa-apple-alt" style="color:#E8A137"></i>' },
+    { key: 'ingredientes.parchita.kg', max: 500, step: 0.1, label: 'Parchita amarilla', unit: 'kg', icon: parchitaSvg(18) },
     { key: 'ingredientes.azucar.kg', max: 500, step: 0.1, label: 'Azúcar refinada', unit: 'kg', icon: '<i class="fas fa-cube" style="color:#D4A853"></i>' },
     { key: 'ingredientes.agua.L', max: 500, step: 0.1, label: 'Agua filtrada', unit: 'L', icon: '<i class="fas fa-tint" style="color:#4A90D9"></i>' },
     { key: 'ingredientes.pectina.g', max: 5000, step: 5, label: 'Pectina cítrica', unit: 'g', icon: '<i class="fas fa-flask" style="color:#8B5CF6"></i>' },
@@ -1430,4 +1467,190 @@ window.addEventListener('beforeinstallprompt', e => {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+/* ======================== 3D PARCHITA EXPLORER ======================== */
+let parchita3dScene, parchita3dCamera, parchita3dRenderer, parchita3dControls;
+let parchita3dLayers = {};
+let parchita3dAutoRotate = true;
+let parchita3dCrossSection = true;
+let parchita3dExploded = false;
+let parchita3dInitialized = false;
+let parchita3dAnimId = null;
+let clipPlane = null;
+const LAYER_RADII = { skin: 2.0, pith: 1.85, pulp: 1.65 };
+
+function initParchita3D() {
+  if (parchita3dInitialized) return;
+  if (typeof THREE === 'undefined') return;
+  const container = document.getElementById('parchita-3d-canvas');
+  if (!container) return;
+
+  clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
+  parchita3dScene = new THREE.Scene();
+
+  const w = container.clientWidth || 600;
+  const h = container.clientHeight || 480;
+  parchita3dCamera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
+  parchita3dCamera.position.set(5, 3, 5);
+  parchita3dCamera.lookAt(0, 0, 0);
+
+  parchita3dRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  parchita3dRenderer.setSize(w, h);
+  parchita3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  parchita3dRenderer.localClippingEnabled = true;
+  parchita3dRenderer.toneMapping = 1;
+  parchita3dRenderer.toneMappingExposure = 1.2;
+  container.appendChild(parchita3dRenderer.domElement);
+
+  parchita3dControls = new THREE.OrbitControls(parchita3dCamera, parchita3dRenderer.domElement);
+  parchita3dControls.enableDamping = true;
+  parchita3dControls.dampingFactor = 0.08;
+  parchita3dControls.minDistance = 3;
+  parchita3dControls.maxDistance = 15;
+  parchita3dControls.autoRotate = true;
+  parchita3dControls.autoRotateSpeed = 2.5;
+  parchita3dControls.target.set(0, 0, 0);
+
+  const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+  parchita3dScene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(5, 8, 5);
+  parchita3dScene.add(dirLight);
+  const fillLight = new THREE.DirectionalLight(0xffdd99, 0.8);
+  fillLight.position.set(-3, 2, -4);
+  parchita3dScene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0x99ccff, 0.6);
+  rimLight.position.set(0, -4, 3);
+  parchita3dScene.add(rimLight);
+
+  buildParchitaLayers();
+
+  const ringGeo = new THREE.RingGeometry(1.8, 2.8, 48);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.y = -2.1;
+  parchita3dScene.add(ring);
+
+  document.querySelectorAll('.layer-toggle').forEach(el => {
+    el.addEventListener('change', function() {
+      const layer = this.dataset.layer;
+      this.classList.toggle('active');
+      const visible = this.classList.contains('active');
+      if (parchita3dLayers[layer]) parchita3dLayers[layer].visible = visible;
+    });
+  });
+
+  parchita3dInitialized = true;
+  animateParchita3D();
+
+  window.addEventListener('resize', () => {
+    const c = document.getElementById('parchita-3d-canvas');
+    if (!c) return;
+    const w2 = c.clientWidth;
+    const h2 = c.clientHeight;
+    if (w2 > 0 && h2 > 0) {
+      parchita3dCamera.aspect = w2 / h2;
+      parchita3dCamera.updateProjectionMatrix();
+      parchita3dRenderer.setSize(w2, h2);
+    }
+  });
+}
+
+function buildParchitaLayers() {
+  function makeLayer(radius, color, emissive, roughness) {
+    const mat = new THREE.MeshStandardMaterial({
+      color, emissive: emissive || 0x000000, emissiveIntensity: 0.05,
+      roughness: roughness || 0.3, metalness: 0,
+      side: THREE.DoubleSide, clippingPlanes: [clipPlane], clipShadows: true,
+    });
+    return new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 48), mat);
+  }
+
+  const skin = makeLayer(LAYER_RADII.skin, 0x7B3FAF, 0x2A1040, 0.4);
+  const pith = makeLayer(LAYER_RADII.pith, 0xFFF8E7, 0x000000, 0.6);
+  const pulp = makeLayer(LAYER_RADII.pulp, 0xF5A623, 0x8B5E00, 0.5);
+
+  const seedGroup = new THREE.Group();
+  const seedMat = new THREE.MeshStandardMaterial({ color: 0x1A1A1A, roughness: 0.8, metalness: 0, clippingPlanes: [clipPlane], clipShadows: true });
+  const seedGeo = new THREE.SphereGeometry(0.08, 8, 8);
+  for (let i = 0; i < 35; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 0.3 + Math.random() * 0.9;
+    const seed = new THREE.Mesh(seedGeo, seedMat);
+    seed.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+    seed.scale.set(1, 0.6, 0.8);
+    seed.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    seedGroup.add(seed);
+  }
+
+  const group = new THREE.Group();
+  group.add(skin, pith, pulp, seedGroup);
+  parchita3dScene.add(group);
+
+  parchita3dLayers = { skin, pith, pulp, seeds: seedGroup, group };
+}
+
+function animateParchita3D() {
+  parchita3dAnimId = requestAnimationFrame(animateParchita3D);
+  if (parchita3dControls) parchita3dControls.update();
+  if (parchita3dRenderer && parchita3dScene && parchita3dCamera) parchita3dRenderer.render(parchita3dScene, parchita3dCamera);
+}
+
+function destroyParchita3D() {
+  if (parchita3dAnimId) { cancelAnimationFrame(parchita3dAnimId); parchita3dAnimId = null; }
+  if (parchita3dRenderer) { parchita3dRenderer.dispose(); const c = parchita3dRenderer.domElement; if (c && c.parentNode) c.parentNode.removeChild(c); }
+  parchita3dInitialized = false;
+  parchita3dScene = parchita3dCamera = parchita3dRenderer = parchita3dControls = null;
+  parchita3dLayers = {};
+}
+
+function toggleCrossSection() {
+  parchita3dCrossSection = !parchita3dCrossSection;
+  document.getElementById('btn-cross-section').classList.toggle('active');
+  ['skin', 'pith', 'pulp'].forEach(k => {
+    const m = parchita3dLayers[k];
+    if (m && m.material) { m.material.clippingPlanes = parchita3dCrossSection ? [clipPlane] : []; m.material.needsUpdate = true; }
+  });
+  if (parchita3dLayers.seeds) parchita3dLayers.seeds.children.forEach(s => { if (s.material) { s.material.clippingPlanes = parchita3dCrossSection ? [clipPlane] : []; s.material.needsUpdate = true; } });
+}
+
+function toggleAutoRotate() {
+  parchita3dAutoRotate = !parchita3dAutoRotate;
+  document.getElementById('btn-autorotate').classList.toggle('active');
+  if (parchita3dControls) parchita3dControls.autoRotate = parchita3dAutoRotate;
+}
+
+function toggleExplode() {
+  parchita3dExploded = !parchita3dExploded;
+  document.getElementById('btn-explode').classList.toggle('active');
+  const target = parchita3dExploded ? { skin: 0, pith: 0.3, pulp: 0.6, seeds: 0.9 } : { skin: 0, pith: 0, pulp: 0, seeds: 0 };
+  const duration = 400;
+  ['skin', 'pith', 'pulp', 'seeds'].forEach(key => {
+    const mesh = parchita3dLayers[key];
+    if (!mesh) return;
+    const startY = mesh.position.y || 0;
+    const targetY = target[key];
+    const t0 = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - t0) / duration);
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      mesh.position.y = startY + (targetY - startY) * ease;
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+function resetParchita3D() {
+  if (parchita3dCamera) { parchita3dCamera.position.set(5, 3, 5); parchita3dControls.target.set(0, 0, 0); parchita3dControls.update(); }
+  if (parchita3dExploded) toggleExplode();
+  if (!parchita3dCrossSection) toggleCrossSection();
+  if (!parchita3dAutoRotate) toggleAutoRotate();
+  document.querySelectorAll('.layer-toggle').forEach(el => {
+    if (!el.classList.contains('active')) { el.classList.add('active'); el.querySelector('input').checked = true; if (parchita3dLayers[el.dataset.layer]) parchita3dLayers[el.dataset.layer].visible = true; }
+  });
+  ['skin', 'pith', 'pulp', 'seeds'].forEach(k => { if (parchita3dLayers[k]) parchita3dLayers[k].position.y = 0; });
 }

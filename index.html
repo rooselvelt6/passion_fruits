@@ -10,6 +10,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
@@ -18,7 +20,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <div class="sidebar-logo"><i class="fas fa-apple-alt fa-lg" style="color:var(--primary)"></i></div>
+    <div class="sidebar-logo"><img src="parchita-icon.svg" width="28" height="28" alt="Parchita" style="filter:hue-rotate(0deg)"></div>
     <div>
       <div class="sidebar-title">Parchita</div>
       <div class="sidebar-subtitle">Costos operativos</div>
@@ -30,6 +32,7 @@
     <button class="tab-btn" data-tab="productos" onclick="switchTab('productos')"><i class="fas fa-box-open"></i>Productos</button>
     <button class="tab-btn" data-tab="historial" onclick="switchTab('historial')"><i class="fas fa-calendar-alt"></i>Historial</button>
     <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i>Dashboard</button>
+    <button class="tab-btn" data-tab="parchita3d" onclick="switchTab('parchita3d')"><i class="fas fa-cube"></i>Parchita 3D</button>
   </nav>
   <div id="sidebar-summary" class="sidebar-summary">
     <!-- filled by renderShared() -->
@@ -76,10 +79,10 @@
 
     <!-- LEFT: Ingredients -->
     <div class="lg:col-span-3 card p-5 space-y-5">
-      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-apple-alt text-primary"></i>Ingredientes</h2>
+      <h2 class="font-semibold text-lg flex items-center gap-2"><img src="parchita-icon.svg" width="22" height="22" alt="" style="vertical-align:middle"> Ingredientes</h2>
 
       <div class="space-y-4">
-        <div class="slider-group" data-key="ingredientes.parchita.kg" data-max="500" data-step="0.1" data-label="Parchita amarilla" data-unit="kg" data-icon="fa-apple-alt"></div>
+        <div class="slider-group" data-key="ingredientes.parchita.kg" data-max="500" data-step="0.1" data-label="Parchita amarilla" data-unit="kg" data-icon="parchita"></div>
         <div class="slider-group" data-key="ingredientes.azucar.kg" data-max="500" data-step="0.1" data-label="Azúcar refinada" data-unit="kg" data-icon="fa-cube"></div>
         <div class="slider-group" data-key="ingredientes.agua.L" data-max="500" data-step="0.1" data-label="Agua filtrada" data-unit="L" data-icon="fa-tint"></div>
         <div class="slider-group" data-key="ingredientes.pectina.g" data-max="5000" data-step="5" data-label="Pectina cítrica" data-unit="g" data-icon="fa-flask"></div>
@@ -102,7 +105,7 @@
 
       <h3 class="font-semibold flex items-center gap-2"><i class="fas fa-tag text-secondary"></i>Precios unitarios (USD)</h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-        <div><span class="text-secondary"><i class="fas fa-apple-alt" style="color:var(--primary)"></i> Parchita</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.parchita.precio" step="0.1"></div>
+        <div><span class="text-secondary"><img src="parchita-icon.svg" width="14" height="14" alt="" style="vertical-align:middle;margin-right:2px"> Parchita</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.parchita.precio" step="0.1"></div>
         <div><span class="text-secondary"><i class="fas fa-cube" style="color:#D4A853"></i> Azúcar</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.azucar.precio" step="0.05"></div>
         <div><span class="text-secondary"><i class="fas fa-tint" style="color:#4A90D9"></i> Agua</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.agua.precio" step="0.05"></div>
         <div><span class="text-secondary"><i class="fas fa-flask" style="color:#8B5CF6"></i> Pectina</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.pectina.precio_g" step="0.01"></div>
@@ -192,7 +195,7 @@
       <div class="text-sm space-y-2">
         <div class="flex justify-between py-1 border-b border-subtle"><span>Peso promedio por fruto</span><span class="font-semibold" id="disp-peso-fruto">70</span><span class="text-secondary">g</span></div>
         <div class="flex justify-between py-1 border-b border-subtle"><span>Frutos necesarios</span><span class="font-semibold text-primary" id="disp-frutos">0</span><span class="text-secondary">unidades</span></div>
-        <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-apple-alt text-amber-500" style="width:18px"></i> Cáscara generada</span><span class="font-semibold" id="disp-cascara">0</span><span class="text-secondary">kg</span></div>
+        <div class="flex justify-between py-1 border-b border-subtle"><span><img src="parchita-icon.svg" width="18" height="18" alt="" style="vertical-align:middle;margin-right:4px"> Cáscara generada</span><span class="font-semibold" id="disp-cascara">0</span><span class="text-secondary">kg</span></div>
         <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-seedling text-amber-700" style="width:18px"></i> Semillas + pulpa</span><span class="font-semibold" id="disp-semillas">0</span><span class="text-secondary">kg</span></div>
         <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-wine-bottle text-green-500" style="width:18px"></i> Jugo extraído</span><span class="font-semibold" id="disp-jugo">0</span><span class="text-secondary">L</span></div>
         <div class="flex justify-between py-2 font-bold text-base"><span><i class="fas fa-recycle text-success" style="width:18px"></i> Total residuo aprovechable</span><span class="text-success" id="disp-total-residuo">0</span><span class="text-secondary">kg</span></div>
@@ -214,7 +217,7 @@
         <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-usd text-success"></i>Valorización de residuos</h2>
         <div class="text-sm space-y-2">
           <div class="flex justify-between py-1 border-b border-subtle">
-            <span><i class="fas fa-apple-alt text-amber-500" style="width:18px"></i> Cáscara → pectina natural</span>
+            <span><img src="parchita-icon.svg" width="18" height="18" alt="" style="vertical-align:middle;margin-right:4px"> Cáscara → pectina natural</span>
             <div><span class="font-semibold" id="disp-valor-cascara">$0.00</span> <input type="number" class="precio-input w-16 text-xs inline" data-key="parchita.precio_cascara_kg" step="0.1" title="$/kg"></div>
           </div>
           <div class="flex justify-between py-1 border-b border-subtle">
@@ -402,6 +405,67 @@
   </div>
 </section>
 
+<!-- ======================== TAB: PARCHITA 3D ======================== -->
+<section id="tab-parchita3d" class="tab-content">
+  <div class="card p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2">
+        <img src="parchita-icon.svg" width="24" height="24" alt="" style="vertical-align:middle">
+        Explorador 3D de la Parchita
+      </h2>
+    </div>
+    <p class="text-xs text-secondary mb-4">Arrastra para rotar · Desplaza para hacer zoom · Cada capa se puede ocultar</p>
+
+    <div id="parchita-3d-container" class="relative" style="height:480px;width:100%;background:var(--bg);border-radius:12px;overflow:hidden">
+      <div id="parchita-3d-canvas" style="width:100%;height:100%"></div>
+    </div>
+
+    <!-- Layer controls -->
+    <div class="flex flex-wrap gap-3 mt-4 justify-center" id="layer-controls">
+      <label class="layer-toggle active" data-layer="skin">
+        <input type="checkbox" checked> <span class="layer-dot" style="background:#7B3FAF"></span> Cáscara
+      </label>
+      <label class="layer-toggle active" data-layer="pith">
+        <input type="checkbox" checked> <span class="layer-dot" style="background:#FFF8E7;border:1px solid rgba(0,0,0,0.1)"></span> Blanco
+      </label>
+      <label class="layer-toggle active" data-layer="pulp">
+        <input type="checkbox" checked> <span class="layer-dot" style="background:#F5A623"></span> Pulpa
+      </label>
+      <label class="layer-toggle active" data-layer="seeds">
+        <input type="checkbox" checked> <span class="layer-dot" style="background:#1A1A1A"></span> Semillas
+      </label>
+    </div>
+
+    <!-- View controls -->
+    <div class="flex flex-wrap gap-2 mt-3 justify-center">
+      <button id="btn-cross-section" class="btn-glass active" onclick="toggleCrossSection()"><i class="fas fa-cut"></i> Corte transversal</button>
+      <button id="btn-autorotate" class="btn-glass active" onclick="toggleAutoRotate()"><i class="fas fa-sync-alt"></i> Auto rotación</button>
+      <button id="btn-explode" class="btn-glass" onclick="toggleExplode()"><i class="fas fa-expand-arrows-alt"></i> Vista explotada</button>
+      <button class="btn-glass" onclick="resetParchita3D()"><i class="fas fa-undo"></i> Reset</button>
+    </div>
+
+    <!-- Legend / Info -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs text-secondary" id="layer-info">
+      <div class="bg-primary-light rounded-lg p-3 text-center">
+        <div class="font-semibold text-default">Cáscara</div>
+        <div>Exterior púrpura · Protege el fruto</div>
+      </div>
+      <div class="bg-primary-light rounded-lg p-3 text-center">
+        <div class="font-semibold text-default">Blanco (Mesocarpio)</div>
+        <div>Capa interna blanca · Rica en pectina</div>
+      </div>
+      <div class="bg-primary-light rounded-lg p-3 text-center">
+        <div class="font-semibold text-default">Pulpa (Arilo)</div>
+        <div>Jugo amarillo-naranja · Aquí está el sabor</div>
+      </div>
+      <div class="bg-primary-light rounded-lg p-3 text-center">
+        <div class="font-semibold text-default">Semillas</div>
+        <div>Aprox. 30 semillas · Valorizables como producto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer class="text-center text-xs text-secondary/60 py-4 no-print glass" style="margin-top:2rem">
@@ -433,6 +497,7 @@
   <button class="nav-item" data-tab="productos" onclick="switchTab('productos')"><i class="fas fa-box-open"></i><span>Productos</span></button>
   <button class="nav-item" data-tab="historial" onclick="switchTab('historial')"><i class="fas fa-calendar-alt"></i><span>Historial</span></button>
   <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
+  <button class="nav-item" data-tab="parchita3d" onclick="switchTab('parchita3d')"><i class="fas fa-cube"></i><span>3D</span></button>
 </nav>
 
 <script src="app.js"></script>
