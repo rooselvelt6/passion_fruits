@@ -1,0 +1,33 @@
+{
+  "name": "Sirope de Parchita — Calculadora de Costos",
+  "short_name": "Parchita Costos",
+  "description": "Calcula costos de producción de sirope de parchita amarilla. Optimiza recetas, registra lotes y analiza rentabilidad.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFFAF3",
+  "theme_color": "#F4A100",
+  "scope": "/",
+  "categories": ["business", "finance", "food"],
+  "lang": "es-VE",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

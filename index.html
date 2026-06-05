@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sirope de Parchita Amarilla — Calculadora de Costos</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo"><i class="fas fa-apple-alt fa-lg" style="color:var(--primary)"></i></div>
+    <div>
+      <div class="sidebar-title">Parchita</div>
+      <div class="sidebar-subtitle">Costos operativos</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="tab-btn active" data-tab="calculadora" onclick="switchTab('calculadora')"><i class="fas fa-flask"></i>Receta</button>
+    <button class="tab-btn" data-tab="residuos" onclick="switchTab('residuos')"><i class="fas fa-seedling"></i>Residuos</button>
+    <button class="tab-btn" data-tab="productos" onclick="switchTab('productos')"><i class="fas fa-box-open"></i>Productos</button>
+    <button class="tab-btn" data-tab="historial" onclick="switchTab('historial')"><i class="fas fa-calendar-alt"></i>Historial</button>
+    <button class="tab-btn" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i>Dashboard</button>
+  </nav>
+  <div id="sidebar-summary" class="sidebar-summary">
+    <!-- filled by renderShared() -->
+    <div class="summary-row"><span class="label"><i class="fas fa-boxes fa-xs" style="width:14px;opacity:0.6"></i> Costo lote</span><span class="value primary" id="sb-costo">$0.00</span></div>
+    <div class="summary-row"><span class="label"><i class="fas fa-flask fa-xs" style="width:14px;opacity:0.6"></i> Rendimiento</span><span class="value" id="sb-rendimiento">0 L</span></div>
+    <div class="summary-divider"></div>
+    <div class="summary-row"><span class="label"><i class="fas fa-percentage fa-xs" style="width:14px;opacity:0.6"></i> ROI (1L)</span><span class="value success" id="sb-roi">0%</span></div>
+    <div class="summary-row"><span class="label"><i class="fas fa-shield-alt fa-xs" style="width:14px;opacity:0.6"></i> Estado</span><span class="value" id="sb-estado">—</span></div>
+    <div class="summary-divider"></div>
+    <div class="summary-row"><span class="label"><i class="fas fa-leaf fa-xs" style="width:14px;opacity:0.6"></i> CO₂ ahorrado</span><span class="value" id="sb-co2">0 kg</span></div>
+    <div class="summary-row"><span class="label"><i class="fas fa-coins fa-xs" style="width:14px;opacity:0.6"></i> Ingreso (1L)</span><span class="value primary" id="sb-ingreso">$0.00</span></div>
+  </div>
+  <button onclick="toggleTheme()" class="sidebar-theme-btn" id="theme-btn" title="Modo oscuro"><i class="fas fa-moon"></i> <span>Oscuro</span></button>
+  <button onclick="exportData()" class="sidebar-theme-btn" title="Exportar backup"><i class="fas fa-download"></i> <span>Backup datos</span></button>
+  <button onclick="document.getElementById('import-file').click()" class="sidebar-theme-btn" title="Importar backup"><i class="fas fa-upload"></i> <span>Restaurar backup</span></button>
+  <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+</aside>
+
+<!-- OVERLAY (mobile) -->
+<div id="sidebar-overlay" onclick="toggleSidebar()" class="sidebar-overlay"></div>
+
+<!-- MAIN AREA -->
+<div class="main-area">
+
+<!-- HEADER -->
+<header class="header-main text-white no-print">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSidebar()" class="sidebar-toggle text-white/60 hover:text-white text-lg" aria-label="Menú"><i class="fas fa-bars"></i></button>
+      <span class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-white/80"><i class="fas fa-seedling text-primary" style="color:#C4956A"></i> Sirope de Parchita</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="badge-header hidden sm:inline-flex items-center gap-1.5"><i class="fas fa-recycle"></i> Zero Waste</span>
+      <span class="badge-header hidden sm:inline-flex items-center gap-1.5"><i class="fas fa-chart-line"></i> v2.0</span>
+    </div>
+  </div>
+</header>
+
+<main class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
+
+<!-- ======================== TAB: CALCULADORA ======================== -->
+<section id="tab-calculadora" class="tab-content active">
+  <div class="grid lg:grid-cols-5 gap-6">
+
+    <!-- LEFT: Ingredients -->
+    <div class="lg:col-span-3 card p-5 space-y-5">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-apple-alt text-primary"></i>Ingredientes</h2>
+
+      <div class="space-y-4">
+        <div class="slider-group" data-key="ingredientes.parchita.kg" data-max="500" data-step="0.1" data-label="Parchita amarilla" data-unit="kg" data-icon="fa-apple-alt"></div>
+        <div class="slider-group" data-key="ingredientes.azucar.kg" data-max="500" data-step="0.1" data-label="Azúcar refinada" data-unit="kg" data-icon="fa-cube"></div>
+        <div class="slider-group" data-key="ingredientes.agua.L" data-max="500" data-step="0.1" data-label="Agua filtrada" data-unit="L" data-icon="fa-tint"></div>
+        <div class="slider-group" data-key="ingredientes.pectina.g" data-max="5000" data-step="5" data-label="Pectina cítrica" data-unit="g" data-icon="fa-flask"></div>
+        <div class="slider-group" data-key="ingredientes.acido_citrico.g" data-max="1000" data-step="1" data-label="Ácido cítrico" data-unit="g" data-icon="fa-vial"></div>
+        <div class="slider-group" data-key="ingredientes.sorbato_potasio.g" data-max="500" data-step="1" data-label="Sorbato de potasio" data-unit="g" data-icon="fa-prescription-bottle"></div>
+      </div>
+
+      <hr class="border-subtle">
+
+      <h3 class="font-semibold flex items-center gap-2"><i class="fas fa-cogs text-secondary"></i>Costos operativos</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div><label class="text-xs text-secondary font-medium">Merma cocción (%)</label><input type="range" id="slider-merma" min="0" max="30" step="1" oninput="updateSimple('costos.merma_pct', this.value)" class="w-full"><span id="val-merma" class="text-sm font-semibold">15</span><span class="text-xs text-secondary">%</span></div>
+        <div><label class="text-xs text-secondary font-medium">Mano de obra ($)</label><input type="number" id="input-mano-obra" step="0.5" oninput="updateSimple('costos.mano_obra', this.value)" class="w-full text-sm mt-1"></div>
+        <div><label class="text-xs text-secondary font-medium">Servicios (gas, luz) ($)</label><input type="number" id="input-servicios" step="0.5" oninput="updateSimple('costos.servicios', this.value)" class="w-full text-sm mt-1"></div>
+        <div><label class="text-xs text-secondary font-medium">Transporte ($)</label><input type="number" id="input-transporte" step="0.5" oninput="updateSimple('costos.transporte', this.value)" class="w-full text-sm mt-1"></div>
+        <div><label class="text-xs text-secondary font-medium">Etiqueta/unidad ($)</label><input type="number" id="input-etiqueta" step="0.05" oninput="updateSimple('costos.etiqueta_unidad', this.value)" class="w-full text-sm mt-1"></div>
+      </div>
+
+      <hr class="border-subtle">
+
+      <h3 class="font-semibold flex items-center gap-2"><i class="fas fa-tag text-secondary"></i>Precios unitarios (USD)</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+        <div><span class="text-secondary"><i class="fas fa-apple-alt" style="color:#C4956A"></i> Parchita</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.parchita.precio" step="0.1"></div>
+        <div><span class="text-secondary"><i class="fas fa-cube" style="color:#D4A853"></i> Azúcar</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.azucar.precio" step="0.05"></div>
+        <div><span class="text-secondary"><i class="fas fa-tint" style="color:#4A90D9"></i> Agua</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.agua.precio" step="0.05"></div>
+        <div><span class="text-secondary"><i class="fas fa-flask" style="color:#8B5CF6"></i> Pectina</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.pectina.precio_g" step="0.01"></div>
+        <div><span class="text-secondary"><i class="fas fa-vial" style="color:#F59E0B"></i> Ácido cítrico</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.acido_citrico.precio_g" step="0.01"></div>
+        <div><span class="text-secondary"><i class="fas fa-prescription-bottle" style="color:#EC4899"></i> Sorbato K</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.sorbato_potasio.precio_g" step="0.01"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Costs + Envases -->
+    <div class="lg:col-span-2 space-y-4">
+      <div class="card p-5 space-y-3">
+        <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-receipt text-primary"></i>Costos del lote</h2>
+        <div id="cost-breakdown" class="space-y-1.5 text-sm"></div>
+        <div id="cost-total" class="pt-2 border-t border-subtle text-lg font-bold flex justify-between"></div>
+      </div>
+
+      <div class="card p-5">
+        <h2 class="font-semibold text-lg flex items-center gap-2 mb-3"><i class="fas fa-chart-bar text-primary"></i>Rendimiento</h2>
+        <div class="text-center mb-4">
+          <span class="text-3xl font-bold text-primary" id="display-rendimiento">0</span>
+          <span class="text-secondary text-sm"> litros netos</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs responsive-table">
+            <thead><tr class="text-secondary border-b border-subtle"><th class="text-left py-2">Envase</th><th class="text-right py-2">Unids</th><th class="text-right py-2">$/unidad</th><th class="text-right py-2">Precio</th><th class="text-right py-2">Ganancia</th></tr></thead>
+            <tbody id="envases-table"></tbody>
+          </table>
+        </div>
+        <div id="roi-display" class="mt-3 pt-3 border-t border-subtle text-center text-lg font-bold"></div>
+      </div>
+
+      <details class="card p-3 text-xs">
+        <summary class="font-medium cursor-pointer text-secondary hover:text-default"><i class="fas fa-box mr-1.5"></i>Precios de envases (compra / venta)</summary>
+        <div class="grid grid-cols-2 gap-2 mt-3" id="envase-prices-grid">
+          <!-- filled by JS -->
+        </div>
+      </details>
+
+      <button onclick="registrarLote()" class="w-full bg-secondary hover:bg-secondary-hover text-white font-medium py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+        <i class="fas fa-save"></i> Registrar lote en historial
+      </button>
+    </div>
+  </div>
+
+  <!-- Precio objetivo + Escalado -->
+  <div class="grid lg:grid-cols-2 gap-6 mt-6">
+    <div class="card p-5 space-y-3">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-crosshairs text-primary"></i>Precio objetivo</h2>
+      <p class="text-xs text-secondary">¿Qué precio necesitas para alcanzar un ROI deseado?</p>
+      <div class="flex items-center gap-3">
+        <label class="text-sm font-medium">ROI deseado:</label>
+        <input type="number" id="input-roi-target" value="30" step="1" class="w-20 text-sm">
+        <span class="text-sm">%</span>
+        <button onclick="calcularPrecioObjetivo()" class="bg-primary text-white text-xs px-4 py-2 rounded-xl hover:bg-primary-hover"><i class="fas fa-calculator"></i> Calcular</button>
+      </div>
+      <div id="precio-objetivo-result" class="text-sm text-secondary"></div>
+    </div>
+    <div class="card p-5 space-y-3">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-expand text-primary"></i>Escalar receta</h2>
+      <p class="text-xs text-secondary">Escala la receta actual a un rendimiento deseado.</p>
+      <div class="flex items-center gap-3 flex-wrap">
+        <label class="text-sm font-medium">Rendimiento deseado:</label>
+        <input type="number" id="input-escalado-litros" value="10" step="0.5" class="w-20 text-sm">
+        <span class="text-sm">L</span>
+        <button onclick="calcularEscalado()" class="bg-primary text-white text-xs px-4 py-2 rounded-xl hover:bg-primary-hover"><i class="fas fa-calculator"></i> Escalar</button>
+      </div>
+      <div id="escalado-result" class="text-sm text-secondary"></div>
+    </div>
+  </div>
+
+  <!-- Proveedores -->
+  <details class="card p-4 mt-6">
+    <summary class="font-semibold text-sm flex items-center gap-2 cursor-pointer text-secondary hover:text-default"><i class="fas fa-truck text-primary"></i> Gestionar proveedores</summary>
+    <div class="mt-3 space-y-3">
+      <button onclick="agregarProveedor()" class="bg-primary text-white text-xs px-3 py-1.5 rounded-lg hover:bg-primary-hover"><i class="fas fa-plus"></i> Añadir proveedor</button>
+      <div id="proveedores-container"></div>
+    </div>
+  </details>
+</section>
+
+<!-- ======================== TAB: RESIDUOS ======================== -->
+<section id="tab-residuos" class="tab-content">
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <div class="card p-5 space-y-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-puzzle-piece text-primary"></i>Composición de la parchita</h2>
+      <div class="text-sm space-y-2">
+        <div class="flex justify-between py-1 border-b border-subtle"><span>Peso promedio por fruto</span><span class="font-semibold" id="disp-peso-fruto">70</span><span class="text-secondary">g</span></div>
+        <div class="flex justify-between py-1 border-b border-subtle"><span>Frutos necesarios</span><span class="font-semibold text-primary" id="disp-frutos">0</span><span class="text-secondary">unidades</span></div>
+        <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-apple-alt text-amber-500" style="width:18px"></i> Cáscara generada</span><span class="font-semibold" id="disp-cascara">0</span><span class="text-secondary">kg</span></div>
+        <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-seedling text-amber-700" style="width:18px"></i> Semillas + pulpa</span><span class="font-semibold" id="disp-semillas">0</span><span class="text-secondary">kg</span></div>
+        <div class="flex justify-between py-1 border-b border-subtle"><span><i class="fas fa-wine-bottle text-green-500" style="width:18px"></i> Jugo extraído</span><span class="font-semibold" id="disp-jugo">0</span><span class="text-secondary">L</span></div>
+        <div class="flex justify-between py-2 font-bold text-base"><span><i class="fas fa-recycle text-success" style="width:18px"></i> Total residuo aprovechable</span><span class="text-success" id="disp-total-residuo">0</span><span class="text-secondary">kg</span></div>
+      </div>
+
+      <div class="bg-primary-light rounded-xl p-4 border border-subtle space-y-2">
+        <h3 class="font-semibold text-sm flex items-center gap-1"><i class="fas fa-sliders-h"></i> Ajustar composición</h3>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div><label>Peso fruto (g)</label><input type="number" id="input-peso-fruto" step="5" oninput="updateSimple('parchita.peso_promedio_g', this.value)" class="w-full"></div>
+          <div><label>% Jugo</label><input type="number" id="input-pct-jugo" step="1" oninput="updateSimple('parchita.pct_jugo', this.value)" class="w-full"></div>
+          <div><label>% Cáscara</label><input type="number" id="input-pct-cascara" step="1" oninput="updateSimple('parchita.pct_cascara', this.value)" class="w-full"></div>
+          <div><label>% Semillas</label><input type="number" id="input-pct-semillas" step="1" oninput="updateSimple('parchita.pct_semillas', this.value)" class="w-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div class="card p-5 space-y-3">
+        <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-usd text-success"></i>Valorización de residuos</h2>
+        <div class="text-sm space-y-2">
+          <div class="flex justify-between py-1 border-b border-subtle">
+            <span><i class="fas fa-apple-alt text-amber-500" style="width:18px"></i> Cáscara → pectina natural</span>
+            <div><span class="font-semibold" id="disp-valor-cascara">$0.00</span> <input type="number" class="precio-input w-16 text-xs inline" data-key="parchita.precio_cascara_kg" step="0.1" title="$/kg"></div>
+          </div>
+          <div class="flex justify-between py-1 border-b border-subtle">
+            <span><i class="fas fa-seedling text-amber-700" style="width:18px"></i> Semillas empacadas</span>
+            <div><span class="font-semibold" id="disp-valor-semillas">$0.00</span> <input type="number" class="precio-input w-16 text-xs inline" data-key="parchita.precio_semillas_kg" step="0.1" title="$/kg"></div>
+          </div>
+          <div class="flex justify-between py-2 text-base font-bold">
+            <span>💰 Ingreso total por residuos</span>
+            <span class="text-success" id="disp-valor-total-residuos">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-5 space-y-3">
+        <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-globe-americas text-green-600"></i>Impacto ambiental — CO₂ ahorrado</h2>
+        <div class="text-center py-3">
+          <div class="text-4xl font-bold text-green-600" id="disp-co2">0</div>
+          <div class="text-sm text-secondary">kg CO₂e ahorrados por lote</div>
+        </div>
+        <div class="text-xs text-secondary space-y-1">
+          <p><i class="fas fa-car mr-1"></i> Equivale a <span class="font-semibold text-default" id="disp-co2-km">0</span> km en auto</p>
+          <p><i class="fas fa-tree mr-1"></i> Equivale a <span class="font-semibold text-default" id="disp-co2-arboles">0.0</span> árboles absorbiendo CO₂ por mes</p>
+        </div>
+      </div>
+
+      <div class="card p-5 bg-secondary-light">
+        <h3 class="font-semibold flex items-center gap-2 text-sm"><i class="fas fa-rocket text-success"></i>ROI ajustado con subproductos</h3>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-sm">ROI sin subproductos:</span>
+          <span class="font-bold" id="disp-roi-base">0%</span>
+        </div>
+        <div class="flex items-center justify-between mt-1">
+          <span class="text-sm">ROI con subproductos:</span>
+          <span class="font-bold text-success text-lg" id="disp-roi-ajustado">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== TAB: PRODUCTOS ======================== -->
+<section id="tab-productos" class="tab-content">
+  <div class="card p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-database text-primary"></i>Mis productos</h2>
+      <button onclick="guardarEstadoComoProducto()" class="bg-primary text-white text-sm px-4 py-2 rounded-xl transition flex items-center gap-2">
+        <i class="fas fa-plus"></i> Guardar actual
+      </button>
+    </div>
+    <div id="productos-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <p class="text-secondary text-sm col-span-full text-center py-8"><i class="fas fa-inbox mr-2"></i>No hay productos guardados. Calcula una receta y guárdala.</p>
+    </div>
+  </div>
+
+  <!-- Production planner -->
+  <div class="card p-5 mt-6">
+    <h2 class="font-semibold text-lg flex items-center gap-2 mb-3"><i class="fas fa-calendar-check text-primary"></i>Planificación de producción</h2>
+    <div class="flex items-center gap-3 mb-4 flex-wrap">
+      <input type="date" id="input-plan-fecha" class="text-sm">
+      <input type="text" id="input-plan-notas" placeholder="Ej: Lote 5 - Sirope clásico" class="flex-1 min-w-[200px] text-sm">
+      <button onclick="agregarPlanificacion()" class="bg-secondary text-white text-xs px-3 py-1.5 rounded-lg hover:bg-secondary-hover"><i class="fas fa-plus"></i> Planificar</button>
+    </div>
+    <div id="planificacion-container" class="space-y-2"></div>
+  </div>
+</section>
+
+<!-- ======================== TAB: HISTORIAL ======================== -->
+<section id="tab-historial" class="tab-content">
+  <div class="card p-5">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-archive text-primary"></i>Historial de lotes</h2>
+      <div class="flex gap-2">
+        <button onclick="exportCSV()" class="border border-subtle hover:bg-amber-50 text-sm px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-file-csv"></i> CSV</button>
+        <button onclick="exportPDF()" class="border border-subtle hover:bg-amber-50 text-sm px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-file-pdf"></i> PDF</button>
+        <button onclick="if(confirm('¿Limpiar todo el historial?')){state.historial=[];saveState();renderAll();}" class="border border-red-200 hover:bg-red-50 text-sm px-3 py-1.5 rounded-lg transition text-red-600"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <details class="mb-4" open>
+      <summary class="text-xs font-medium text-secondary cursor-pointer hover:text-default mb-2"><i class="fas fa-filter mr-1"></i> Filtros</summary>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+        <input type="text" id="filtro-busqueda" placeholder="🔍 Buscar receta..." oninput="aplicarFiltros()" class="text-xs">
+        <input type="date" id="filtro-fecha-desde" onchange="aplicarFiltros()" class="text-xs" title="Desde">
+        <input type="date" id="filtro-fecha-hasta" onchange="aplicarFiltros()" class="text-xs" title="Hasta">
+        <input type="number" id="filtro-roi-min" placeholder="ROI mín. %" oninput="aplicarFiltros()" class="text-xs" min="0" step="1">
+        <button id="filtro-sort" onclick="state.ui.filtros.orden=state.ui.filtros.orden==='asc'?'desc':'asc';aplicarFiltros()" class="border border-subtle rounded-lg hover:bg-amber-50 text-xs px-2 py-1"><i class="fas fa-arrow-down"></i> Desc</button>
+      </div>
+    </details>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs responsive-table" id="historial-table">
+        <thead><tr class="text-secondary border-b border-subtle"><th class="text-left py-2">Fecha</th><th class="text-left py-2">Receta</th><th class="text-right py-2">Costo total</th><th class="text-right py-2">Rendimiento</th><th class="text-right py-2">ROI</th><th class="text-right py-2">CO₂ ahorrado</th><th class="text-right py-2">Acción</th></tr></thead>
+        <tbody id="historial-body"></tbody>
+      </table>
+      <p id="historial-empty" class="text-secondary text-sm text-center py-8 hidden"><i class="fas fa-inbox mr-2"></i>Aún no hay registros. Calcula y registra tu primer lote.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== TAB: DASHBOARD ======================== -->
+<section id="tab-dashboard" class="tab-content">
+
+  <!-- KPI Cards Row -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" id="dash-kpis"></div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <div class="card p-5 space-y-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-chart-pie text-primary"></i>Distribución de costos</h2>
+      <div class="relative" style="height:260px"><canvas id="costChart"></canvas></div>
+    </div>
+
+    <div class="card p-5 space-y-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-tachometer-alt text-primary"></i>Viabilidad del proyecto</h2>
+      <div id="dashboard-viabilidad" class="text-center py-4"></div>
+
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="bg-primary-light rounded-xl p-3 border border-subtle">
+          <div class="text-secondary text-xs">Costo ingredientes</div>
+          <div class="font-bold text-lg" id="dash-costo-ingredientes">$0.00</div>
+        </div>
+        <div class="bg-primary-light rounded-xl p-3 border border-subtle">
+          <div class="text-secondary text-xs">Costo operativo</div>
+          <div class="font-bold text-lg" id="dash-costo-operativo">$0.00</div>
+        </div>
+        <div class="bg-secondary-light rounded-xl p-3 border border-subtle">
+          <div class="text-secondary text-xs">Valor residuos</div>
+          <div class="font-bold text-lg text-success" id="dash-valor-residuos">$0.00</div>
+        </div>
+        <div class="bg-primary-light rounded-xl p-3 border border-subtle">
+          <div class="text-secondary text-xs">Ingreso estimado</div>
+          <div class="font-bold text-lg" id="dash-ingreso">$0.00</div>
+        </div>
+      </div>
+
+      <hr class="border-subtle">
+
+      <div class="text-sm space-y-1">
+        <div class="flex justify-between"><span>Inversión total</span><span class="font-bold" id="dash-inversion">$0.00</span></div>
+        <div class="flex justify-between"><span>Ingreso total (1L)</span><span class="font-bold" id="dash-ingreso-total">$0.00</span></div>
+        <div class="flex justify-between text-lg pt-1 border-t border-subtle"><span>ROI con subproductos</span><span class="font-bold" id="dash-roi-final">0%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Radar chart + Monthly projection -->
+  <div class="grid lg:grid-cols-2 gap-6 mt-6">
+    <div class="card p-5 space-y-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-spider text-primary"></i>Rendimiento multidimensional</h2>
+      <div class="relative" style="height:260px"><canvas id="radarChart"></canvas></div>
+      <p class="text-xs text-secondary text-center">Puntuación relativa del lote actual en 5 dimensiones clave</p>
+    </div>
+
+    <div class="card p-5 space-y-4">
+      <h2 class="font-semibold text-lg flex items-center gap-2"><i class="fas fa-calendar-alt text-primary"></i>Proyección mensual</h2>
+      <div class="flex items-center gap-3 mb-3 text-sm flex-wrap">
+        <label class="text-secondary">Lotes/mes:</label>
+        <input type="number" id="input-proy-lotes" value="4" min="1" max="100" class="w-16 text-sm">
+        <label class="text-secondary">Precio venta ($):</label>
+        <input type="number" id="input-proy-precio" step="0.5" class="w-20 text-sm">
+        <button onclick="renderMonthlyProjection()" class="bg-primary text-white text-xs px-3 py-1.5 rounded-lg hover:bg-primary-hover">Actualizar</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead><tr class="text-secondary border-b border-subtle"><th class="text-left py-1">Mes</th><th class="text-right py-1">Lotes</th><th class="text-right py-1">Inversión</th><th class="text-right py-1">Ingreso</th><th class="text-right py-1">Ganancia</th><th class="text-right py-1">ROI</th></tr></thead>
+          <tbody id="proy-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Break-even chart -->
+  <div class="card p-5 mt-6">
+    <h2 class="font-semibold text-lg flex items-center gap-2 mb-3"><i class="fas fa-chart-line text-primary"></i>Punto de equilibrio</h2>
+    <div class="relative" style="height:240px"><canvas id="breakevenChart"></canvas></div>
+    <div class="text-xs text-secondary text-center mt-2" id="breakeven-info"></div>
+  </div>
+
+  <!-- Historical cost chart -->
+  <div class="card p-5 mt-6">
+    <h2 class="font-semibold text-lg flex items-center gap-2 mb-3"><i class="fas fa-history text-primary"></i>Evolución de costos</h2>
+    <div class="relative" style="height:240px"><canvas id="historyChart"></canvas></div>
+    <p id="history-chart-empty" class="text-secondary text-sm text-center py-8 hidden"><i class="fas fa-inbox mr-2"></i>Registra lotes en el historial para ver tendencias.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="text-center text-xs text-secondary/60 py-4 no-print glass" style="border-radius:0;margin-top:2rem">
+  <i class="fas fa-heart mr-1" style="color:#C4956A"></i> Hecho con pasión por el emprendimiento venezolano
+</footer>
+
+</div><!-- end main-area -->
+</div><!-- end app-layout -->
+
+<!-- MODAL -->
+<div id="modal-edit" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4" onclick="if(event.target===this)closeModal()">
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl" onclick="event.stopPropagation()">
+    <h3 class="font-semibold text-lg mb-4" id="modal-title">Guardar producto</h3>
+    <label class="text-sm font-medium text-secondary">Nombre del producto</label>
+    <input type="text" id="modal-product-name" class="w-full mt-1 mb-4" placeholder="Ej: Sirope clásico 2kg" maxlength="60">
+    <div class="flex gap-2 justify-end">
+      <button onclick="closeModal()" class="px-4 py-2 border border-subtle rounded-xl text-sm hover:bg-gray-50">Cancelar</button>
+      <button onclick="confirmSaveProduct()" class="px-4 py-2 bg-primary text-white rounded-xl text-sm"><i class="fas fa-save mr-1"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav no-print">
+  <button class="nav-item" data-tab="calculadora" onclick="switchTab('calculadora')"><i class="fas fa-flask"></i><span>Receta</span></button>
+  <button class="nav-item" data-tab="residuos" onclick="switchTab('residuos')"><i class="fas fa-seedling"></i><span>Residuos</span></button>
+  <button class="nav-item" data-tab="productos" onclick="switchTab('productos')"><i class="fas fa-box-open"></i><span>Productos</span></button>
+  <button class="nav-item" data-tab="historial" onclick="switchTab('historial')"><i class="fas fa-calendar-alt"></i><span>Historial</span></button>
+  <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
+</nav>
+
+<script src="app.js"></script>
+
+</body>
+</html>
