@@ -59,7 +59,7 @@
   <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <button onclick="toggleSidebar()" class="sidebar-toggle text-white/60 hover:text-white text-lg" aria-label="Menú"><i class="fas fa-bars"></i></button>
-      <span class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-white/80"><i class="fas fa-seedling text-primary" style="color:#C4956A"></i> Sirope de Parchita</span>
+      <span class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-white/80"><i class="fas fa-seedling text-primary" style="color:var(--primary)"></i> Sirope de Parchita</span>
     </div>
     <div class="flex items-center gap-3">
       <span class="badge-header hidden sm:inline-flex items-center gap-1.5"><i class="fas fa-recycle"></i> Zero Waste</span>
@@ -102,7 +102,7 @@
 
       <h3 class="font-semibold flex items-center gap-2"><i class="fas fa-tag text-secondary"></i>Precios unitarios (USD)</h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-        <div><span class="text-secondary"><i class="fas fa-apple-alt" style="color:#C4956A"></i> Parchita</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.parchita.precio" step="0.1"></div>
+        <div><span class="text-secondary"><i class="fas fa-apple-alt" style="color:var(--primary)"></i> Parchita</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.parchita.precio" step="0.1"></div>
         <div><span class="text-secondary"><i class="fas fa-cube" style="color:#D4A853"></i> Azúcar</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.azucar.precio" step="0.05"></div>
         <div><span class="text-secondary"><i class="fas fa-tint" style="color:#4A90D9"></i> Agua</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.agua.precio" step="0.05"></div>
         <div><span class="text-secondary"><i class="fas fa-flask" style="color:#8B5CF6"></i> Pectina</span><br><input type="number" class="precio-input w-full mt-0.5" data-key="ingredientes.pectina.precio_g" step="0.01"></div>
@@ -404,8 +404,8 @@
 
 </main>
 
-<footer class="text-center text-xs text-secondary/60 py-4 no-print glass" style="border-radius:0;margin-top:2rem">
-  <i class="fas fa-heart mr-1" style="color:#C4956A"></i> Hecho con pasión por el emprendimiento venezolano
+<footer class="text-center text-xs text-secondary/60 py-4 no-print glass" style="margin-top:2rem">
+  <i class="fas fa-heart mr-1" style="color:var(--primary)"></i> Hecho con pasión por el emprendimiento venezolano
 </footer>
 
 </div><!-- end main-area -->

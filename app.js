@@ -529,7 +529,7 @@ function renderCalculadora() {
   const bd = $('cost-breakdown');
   const icn = (fa, style) => `<i class="fas fa-${fa}" style="width:16px;text-align:center;${style||''}"></i>`;
   bd.innerHTML = `
-    <div class="flex justify-between"><span>${icn('apple-alt','color:#C4956A')} Parchita (${state.ingredientes.parchita.kg}kg)</span><span>$${calc.costIngredientes.parchita.toFixed(2)}</span></div>
+    <div class="flex justify-between"><span>${icn('apple-alt','color:#E8A137')} Parchita (${state.ingredientes.parchita.kg}kg)</span><span>$${calc.costIngredientes.parchita.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('cube','color:#D4A853')} Azúcar (${state.ingredientes.azucar.kg}kg)</span><span>$${calc.costIngredientes.azucar.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('tint','color:#4A90D9')} Agua (${state.ingredientes.agua.L}L)</span><span>$${calc.costIngredientes.agua.toFixed(2)}</span></div>
     <div class="flex justify-between"><span>${icn('flask','color:#8B5CF6')} Pectina (${state.ingredientes.pectina.g}g)</span><span>$${calc.costIngredientes.pectina.toFixed(2)}</span></div>
@@ -631,7 +631,7 @@ function renderProductos() {
         </div>
       </div>
       <div class="text-xs text-secondary mt-2 space-y-0.5">
-        <div><i class="fas fa-apple-alt" style="color:#C4956A;width:14px"></i> ${safeNumber(p.parchita,0)}kg · <i class="fas fa-cube" style="color:#D4A853;width:14px"></i> ${safeNumber(p.azucar,0)}kg · <i class="fas fa-tint" style="color:#4A90D9;width:14px"></i> ${safeNumber(p.agua,0)}L</div>
+        <div><i class="fas fa-apple-alt" style="color:#E8A137;width:14px"></i> ${safeNumber(p.parchita,0)}kg · <i class="fas fa-cube" style="color:#D4A853;width:14px"></i> ${safeNumber(p.azucar,0)}kg · <i class="fas fa-tint" style="color:#4A90D9;width:14px"></i> ${safeNumber(p.agua,0)}L</div>
         <div><i class="fas fa-flask" style="color:#8B5CF6;width:14px"></i> ${safeNumber(p.pectina,0)}g · <i class="fas fa-vial" style="color:#F59E0B;width:14px"></i> ${safeNumber(p.acido_citrico,0)}g ácido</div>
       </div>
       <div class="mt-2 flex gap-1">
@@ -777,10 +777,10 @@ function renderRadarChart() {
       datasets: [{
         label: 'Lote actual',
         data: [puntajeCosto, puntajeSostenibilidad, puntajeRentabilidad, puntajeResiduos, eficienciaProd],
-        backgroundColor: 'rgba(244, 161, 0, 0.2)',
-        borderColor: '#F4A100',
+        backgroundColor: 'rgba(232, 161, 55, 0.2)',
+        borderColor: '#E8A137',
         borderWidth: 2,
-        pointBackgroundColor: '#F4A100',
+        pointBackgroundColor: '#E8A137',
         pointBorderColor: '#fff',
         pointBorderWidth: 1,
         pointRadius: 4
@@ -851,7 +851,7 @@ function renderCostChart(calc, ref) {
       state.costos.transporte,
       ref ? ref.totalEnvase : 0
     ],
-    colors: ['#F4A100', '#E8751A', '#2D8B4E', '#D4A853', '#7A5C4A']
+    colors: ['#E8A137', '#D4902F', '#2D9F8E', '#C4956A', '#8B6F5A']
   };
 
   if (costChart) { costChart.destroy(); }
@@ -864,7 +864,7 @@ function renderCostChart(calc, ref) {
         data: data.values.map(v => Math.max(0.01, v)),
         backgroundColor: data.colors,
         borderWidth: 3,
-        borderColor: '#FFFAF3',
+        borderColor: '#F0EDEA',
         hoverOffset: 8
       }]
     },
@@ -912,8 +912,8 @@ function renderBreakevenChart(ref, totalConEnvase) {
     data: {
       labels,
       datasets: [
-        { label: 'Costos totales', data: costs, borderColor: '#C44545', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3 },
-        { label: 'Ingresos', data: revs, borderColor: '#2D7D46', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3 }
+        { label: 'Costos totales', data: costs, borderColor: '#C44545', backgroundColor: 'rgba(196,69,69,0.06)', borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true },
+        { label: 'Ingresos', data: revs, borderColor: '#2D9F8E', backgroundColor: 'rgba(45,159,142,0.06)', borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true }
       ]
     },
     options: {
@@ -952,8 +952,8 @@ function renderHistoryChart() {
     data: {
       labels: hLabels,
       datasets: [
-        { label: 'Costo total ($)', data: recent.map(r => safeNumber(r.costo_total,0) || 0), borderColor: '#C4905A', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, tension: 0.3 },
-        { label: 'ROI (%)', data: recent.map(r => safeNumber(r.roi,0) || 0), borderColor: '#5B8C5B', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, tension: 0.3, yAxisID: 'y1' }
+        { label: 'Costo total ($)', data: recent.map(r => safeNumber(r.costo_total,0) || 0), borderColor: '#E8A137', backgroundColor: 'rgba(232, 161, 55, 0.08)', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: true },
+        { label: 'ROI (%)', data: recent.map(r => safeNumber(r.roi,0) || 0), borderColor: '#2D9F8E', backgroundColor: 'rgba(45, 159, 142, 0.08)', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: true, yAxisID: 'y1' }
       ]
     },
     options: {
@@ -1008,7 +1008,7 @@ function calcularEscalado() {
     <div class="mt-2 space-y-1 p-3 bg-amber-50 rounded-xl border border-subtle">
       <div class="text-xs text-secondary mb-1">Para obtener <strong>${targetL.toFixed(1)}L</strong> (factor: ${factor.toFixed(3)}x):</div>
       <div class="grid grid-cols-2 gap-x-4 gap-y-0.5 text-sm">
-        <span><i class="fas fa-apple-alt" style="color:#C4956A;width:16px"></i> Parchita</span><span class="font-semibold text-right">${scaled.parchita.toFixed(1)} kg</span>
+        <span><i class="fas fa-apple-alt" style="color:#E8A137;width:16px"></i> Parchita</span><span class="font-semibold text-right">${scaled.parchita.toFixed(1)} kg</span>
         <span><i class="fas fa-cube" style="color:#D4A853;width:16px"></i> Azúcar</span><span class="font-semibold text-right">${scaled.azucar.toFixed(1)} kg</span>
         <span><i class="fas fa-tint" style="color:#4A90D9;width:16px"></i> Agua</span><span class="font-semibold text-right">${scaled.agua.toFixed(1)} L</span>
         <span><i class="fas fa-flask" style="color:#8B5CF6;width:16px"></i> Pectina</span><span class="font-semibold text-right">${scaled.pectina.toFixed(0)} g</span>
@@ -1233,7 +1233,7 @@ function exportPDF() {
 // ======================== SLIDER INIT ========================
 function initSliders() {
   const configs = [
-    { key: 'ingredientes.parchita.kg', max: 500, step: 0.1, label: 'Parchita amarilla', unit: 'kg', icon: '<i class="fas fa-apple-alt" style="color:#C4956A"></i>' },
+    { key: 'ingredientes.parchita.kg', max: 500, step: 0.1, label: 'Parchita amarilla', unit: 'kg', icon: '<i class="fas fa-apple-alt" style="color:#E8A137"></i>' },
     { key: 'ingredientes.azucar.kg', max: 500, step: 0.1, label: 'Azúcar refinada', unit: 'kg', icon: '<i class="fas fa-cube" style="color:#D4A853"></i>' },
     { key: 'ingredientes.agua.L', max: 500, step: 0.1, label: 'Agua filtrada', unit: 'L', icon: '<i class="fas fa-tint" style="color:#4A90D9"></i>' },
     { key: 'ingredientes.pectina.g', max: 5000, step: 5, label: 'Pectina cítrica', unit: 'g', icon: '<i class="fas fa-flask" style="color:#8B5CF6"></i>' },
