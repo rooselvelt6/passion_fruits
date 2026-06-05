@@ -109,6 +109,12 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem('parchita_state', JSON.stringify(state)); } catch(e) {}
+  if (window.JUEGO) {
+    try { localStorage.setItem('parchita_juego', JSON.stringify({
+      activo: JUEGO.activo, fase: JUEGO.fase, data: JUEGO.data,
+      fasesCompletadas: JUEGO.fasesCompletadas, resultados: JUEGO.resultados
+    })); } catch(e) {}
+  }
 }
 
 // ======================== UI HELPERS ========================
@@ -298,6 +304,16 @@ function switchTab(tab) {
   if (window.innerWidth <= 768) toggleSidebar(false);
   if (tab === 'parchita3d') {
     setTimeout(() => initParchita3D(), 100);
+  }
+  if (tab === 'disenador') {
+    setTimeout(() => {
+      if (typeof initDisenador === 'function') initDisenador();
+    }, 100);
+  }
+  if (tab === 'produccion') {
+    setTimeout(() => {
+      if (typeof prodInit === 'function') prodInit();
+    }, 100);
   }
 }
 
