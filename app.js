@@ -1696,107 +1696,192 @@ function resetParchita3D() {
   ['skin', 'pith', 'pulp', 'seeds'].forEach(k => { if (parchita3dLayers[k]) parchita3dLayers[k].position.y = 0; });
 }
 
-/* ======================== LAYER PROPERTIES ======================== */
-const LAYER_PROPERTIES = {
+/* ======================== LAYER PROPERTIES (VISUAL) ======================== */
+const LAYER_PROPS = {
   skin: {
-    name: 'Cáscara',
-    latin: 'Exocarpio · Passiflora edulis flavicarpa',
-    color: '#E8B830',
-    composition: 'Carotenoides (β-caroteno, licopeno), fibra dietética (28-35% base seca), pectina de bajo metoxilo, flavonoides, vitamina A y C.',
-    properties: 'Alta capacidad antioxidante, antiinflamatoria natural. La fibra insoluble representa el 60% del total, ideal para regular tránsito intestinal. PH ~4.5.',
-    uses: 'Harina de cáscara para panadería, colorante natural (curcumina), extracción de pectina para mermeladas, infusión digestiva, biocombustible.',
-    funfact: 'La cáscara representa ~45% del peso total del fruto. ¡Casi la mitad! Transformarla en harina reduce el desperdicio y genera un ingrediente rico en fibra.',
+    name: 'Cáscara', latin: 'Exocarpio · Flavicarpa',
+    color: '#E8B830', dotBorder: 'none',
+    comp: [
+      { i: 'fa-dna', l: 'Carotenoides', v: 'β-caroteno·licopeno', c: '#E8B830' },
+      { i: 'fa-leaf', l: 'Fibra dietética', v: '28-35%', c: '#4CAF50' },
+      { i: 'fa-flask', l: 'Pectina', v: 'Bajo metoxilo', c: '#F5A623' },
+      { i: 'fa-seedling', l: 'Flavonoides', v: 'Alta concentración', c: '#9C27B0' },
+      { i: 'fa-pills', l: 'Vit. A + C', v: 'Antioxidante', c: '#FF6B35' },
+    ],
+    props: [
+      { i: 'fa-shield-alt', l: 'Antioxidante', v: 'Alto', c: '#4CAF50' },
+      { i: 'fa-fire', l: 'Antiinflamatoria', v: 'Natural', c: '#FF6B35' },
+      { i: 'fa-weight', l: 'Fibra insoluble', v: '60% total', c: '#8B6F5A' },
+      { i: 'fa-vial', l: 'pH', v: '~4.5', c: '#2196F3' },
+    ],
+    uses: [
+      { i: 'fa-bread-slice', l: 'Harina', c: '#8B6F5A' },
+      { i: 'fa-palette', l: 'Colorante', c: '#E8B830' },
+      { i: 'fa-flask', l: 'Pectina', c: '#F5A623' },
+      { i: 'fa-mug-hot', l: 'Infusión', c: '#6D4C41' },
+      { i: 'fa-gas-pump', l: 'Biocombustible', c: '#2E7D32' },
+    ],
     stats: [
-      { label: 'Peso del fruto', value: '45%' },
-      { label: 'Fibra dietética', value: '28-35%' },
-      { label: 'Antioxidantes', value: 'Alto' },
-    ]
+      { l: 'Peso del fruto', v: '45%', i: 'fa-percentage' },
+      { l: 'Fibra', v: '28-35%', i: 'fa-leaf' },
+      { l: 'Antioxidante', v: 'Alto', i: 'fa-shield-alt' },
+    ],
+    fun: { i: 'fa-lightbulb', t: '¡La cáscara pesa casi la mitad del fruto! Nada se desperdicia.', c: '#E8B830' }
   },
   pith: {
-    name: 'Blanco (Mesocarpio)',
-    latin: 'Mesocarpio · Capa interna esponjosa',
-    color: '#FFF8E7',
-    composition: 'Pectina de alto metoxilo (grado de esterificación >70%), celulosa, hemicelulosa, lignina, calcio, magnesio.',
-    properties: 'Poder gelificante excepcional: forma geles en presencia de azúcar y ácido (pH 2.8-3.5). Capacidad de retención de agua: 8-10x su peso seco.',
-    uses: 'Gelificante natural para mermeladas artesanales, espesante para salsas, agente de textura en repostería vegana, soporte para cultivo de hongos.',
-    funfact: 'La pectina del mesocarpio de parchita tiene un poder gelificante superior al de la manzana o los cítricos. ¡Es un gelificante de primera calidad!',
+    name: 'Blanco (Mesocarpio)', latin: 'Capa interna esponjosa',
+    color: '#FFF8E7', dotBorder: '1px solid rgba(0,0,0,0.15)',
+    comp: [
+      { i: 'fa-flask', l: 'Pectina', v: 'Alto metoxilo >70%', c: '#F5A623' },
+      { i: 'fa-tree', l: 'Celulosa', v: 'Estructural', c: '#8B6F5A' },
+      { i: 'fa-leaf', l: 'Hemicelulosa', v: 'Matriz fibrosa', c: '#4CAF50' },
+      { i: 'fa-fire', l: 'Lignina', v: 'Resistencia', c: '#6D4C41' },
+      { i: 'fa-flask', l: 'Calcio + Mg', v: 'Minerales', c: '#2196F3' },
+    ],
+    props: [
+      { i: 'fa-cube', l: 'Poder gelificante', v: 'Superior a manzana', c: '#F5A623' },
+      { i: 'fa-tint', l: 'Ret. agua', v: '8-10x su peso', c: '#2196F3' },
+      { i: 'fa-vial', l: 'pH óptimo', v: '2.8-3.5', c: '#9C27B0' },
+      { i: 'fa-snowflake', l: 'Geles térmicos', v: 'Alta estabilidad', c: '#00BCD4' },
+    ],
+    uses: [
+      { i: 'fa-prescription-bottle', l: 'Mermeladas', c: '#E91E63' },
+      { i: 'fa-utensils', l: 'Espesante', c: '#FF6B35' },
+      { i: 'fa-seedling', l: 'Vegano', c: '#4CAF50' },
+      { i: 'fa-leaf', l: 'Hongos', c: '#8B6F5A' },
+    ],
     stats: [
-      { label: 'Grado esterif.', value: '>70%' },
-      { label: 'Ret. agua', value: '8-10x' },
-      { label: 'pH óptimo', value: '2.8-3.5' },
-    ]
+      { l: 'Grado esterif.', v: '>70%', i: 'fa-percentage' },
+      { l: 'Ret. agua', v: '8-10x', i: 'fa-tint' },
+      { l: 'pH óptimo', v: '2.8-3.5', i: 'fa-vial' },
+    ],
+    fun: { i: 'fa-lightbulb', t: 'Su pectina gelifica mejor que la manzana. ¡Gelificante premium!', c: '#F5A623' }
   },
   pulp: {
-    name: 'Pulpa (Arilo)',
-    latin: 'Arilo · Jugo amarillo-naranja',
-    color: '#F5A623',
-    composition: 'Agua (82-85%), carbohidratos (12-15%), vitamina C (30mg/100g), fósforo, hierro, calcio, vitamina B3, β-criptoxantina.',
-    properties: '°Brix: 14-18 · pH: 2.8-3.2. Alto contenido de ácido cítrico y ascórbico. Perfil sensorial intenso: tropical, dulce-ácido, aromático.',
-    uses: 'Jugo concentrado, sirope artesanal (tu producto!), sorbetes, mermelada, vinagre tropical, cócteles, marinadas para carnes.',
-    funfact: 'El rendimiento de jugo es de ~35% del peso total del fruto. Una parchita de 70g rinde ~25ml de jugo puro — de ahí viene tu sirope.',
+    name: 'Pulpa (Arilo)', latin: 'Jugo amarillo-naranja',
+    color: '#F5A623', dotBorder: 'none',
+    comp: [
+      { i: 'fa-tint', l: 'Agua', v: '82-85%', c: '#2196F3' },
+      { i: 'fa-cube', l: 'Carbohidratos', v: '12-15%', c: '#F5A623' },
+      { i: 'fa-pills', l: 'Vitamina C', v: '30mg/100g', c: '#FF6B35' },
+      { i: 'fa-bone', l: 'Fósforo + Ca', v: 'Minerales', c: '#8B6F5A' },
+      { i: 'fa-brain', l: 'Vit. B3', v: 'Niacina', c: '#9C27B0' },
+    ],
+    props: [
+      { i: 'fa-ruler', l: '°Brix', v: '14-18', c: '#E8B830' },
+      { i: 'fa-vial', l: 'pH', v: '2.8-3.2', c: '#F44336' },
+      { i: 'fa-lemon', l: 'Ácido cítrico', v: 'Natural', c: '#4CAF50' },
+      { i: 'fa-star', l: 'Perfil sensorial', v: 'Tropical intenso', c: '#FF6B35' },
+    ],
+    uses: [
+      { i: 'fa-wine-bottle', l: 'Jugo', c: '#E8B830' },
+      { i: 'fa-flask', l: 'Sirope', c: '#FF6B35' },
+      { i: 'fa-ice-cream', l: 'Sorbetes', c: '#00BCD4' },
+      { i: 'fa-jar', l: 'Mermelada', c: '#E91E63' },
+      { i: 'fa-martini-glass', l: 'Cócteles', c: '#9C27B0' },
+    ],
     stats: [
-      { label: '°Brix', value: '14-18' },
-      { label: 'Vitamina C', value: '30mg/100g' },
-      { label: 'Rend. jugo', value: '~35%' },
-    ]
+      { l: '°Brix', v: '14-18', i: 'fa-ruler' },
+      { l: 'Vit. C', v: '30mg/100g', i: 'fa-pills' },
+      { l: 'Rend. jugo', v: '~35%', i: 'fa-tint' },
+    ],
+    fun: { i: 'fa-lightbulb', t: 'Una parchita de 70g rinde ~25ml de jugo puro. ¡De ahí nace tu sirope!', c: '#F5A623' }
   },
   seeds: {
-    name: 'Semillas',
-    latin: 'Semillas · Aprox. 35 por fruto',
-    color: '#1A1A1A',
-    composition: 'Ácido linoleico (omega-6) 65-70%, ácido oleico 15-18%, proteína 18-22%, tocoferoles (vitamina E), fitoesteroles, polifenoles.',
-    properties: 'Aceite de semilla rico en ácidos grasos insaturados (85% del total). Alto poder antioxidante, emoliente, regenerador celular. Libre de transgénicos.',
-    uses: 'Aceite cosmético de lujo (antienvejecimiento), harina proteica para panadería, exfoliante natural, biocombustible de segunda generación.',
-    funfact: 'El aceite de semilla de parchita se vende en la industria cosmética hasta por $50 el litro. ¡Más rentable que el mismo jugo!',
+    name: 'Semillas', latin: 'Aprox. 35 por fruto',
+    color: '#1A1A1A', dotBorder: 'none',
+    comp: [
+      { i: 'fa-oil-can', l: 'Omega-6', v: '65-70%', c: '#E8B830' },
+      { i: 'fa-oil-can', l: 'Ácido oleico', v: '15-18%', c: '#4CAF50' },
+      { i: 'fa-dumbbell', l: 'Proteína', v: '18-22%', c: '#FF6B35' },
+      { i: 'fa-pills', l: 'Vitamina E', v: 'Tocoferoles', c: '#9C27B0' },
+      { i: 'fa-leaf', l: 'Polifenoles', v: 'Antioxidante', c: '#8B6F5A' },
+    ],
+    props: [
+      { i: 'fa-percentage', l: 'Insaturados', v: '85% total', c: '#4CAF50' },
+      { i: 'fa-shield-alt', l: 'Antioxidante', v: 'Alto', c: '#FF6B35' },
+      { i: 'fa-spa', l: 'Emoliente', v: 'Regenerador', c: '#E91E63' },
+      { i: 'fa-leaf', l: 'No transgénico', v: '100% natural', c: '#2E7D32' },
+    ],
+    uses: [
+      { i: 'fa-spa', l: 'Aceite lujo', c: '#E8B830' },
+      { i: 'fa-dumbbell', l: 'Harina proteica', c: '#8B6F5A' },
+      { i: 'fa-hand-sparkles', l: 'Exfoliante', c: '#4CAF50' },
+      { i: 'fa-gas-pump', l: 'Biocombustible', c: '#2E7D32' },
+    ],
     stats: [
-      { label: 'Omega-6', value: '65-70%' },
-      { label: 'Proteína', value: '18-22%' },
-      { label: 'Aceite/fruto', value: '~2g' },
-    ]
+      { l: 'Omega-6', v: '65-70%', i: 'fa-oil-can' },
+      { l: 'Proteína', v: '18-22%', i: 'fa-dumbbell' },
+      { l: 'Valor aceite', v: '~$50/L', i: 'fa-dollar-sign' },
+    ],
+    fun: { i: 'fa-lightbulb', t: 'El aceite de semilla se vende hasta $50/L en cosmética. ¡Más rentable que el jugo!', c: '#1A1A1A' }
   }
 };
+
+/* ======================== VISUAL RENDERERS ======================== */
+function renderPropCards(items) {
+  return items.map(p => `
+    <div class="prop-card" style="background:${p.c}15;border-color:${p.c}40">
+      <div class="prop-card-icon" style="background:${p.c};color:#fff"><i class="fas ${p.i}"></i></div>
+      <div class="prop-card-body">
+        <div class="prop-card-label">${p.l}</div>
+        <div class="prop-card-val">${p.v || ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function renderUseTags(items) {
+  return items.map(u => `
+    <span class="use-tag" style="background:${u.c}18;color:${u.c};border-color:${u.c}40">
+      <i class="fas ${u.i}" style="font-size:.65rem"></i> ${u.l}
+    </span>
+  `).join('');
+}
+function renderStatCards(items) {
+  return items.map(s => `
+    <div class="stat-card"><i class="fas ${s.i} stat-card-icon"></i>
+      <div class="stat-card-val">${s.v}</div>
+      <div class="stat-card-label">${s.l}</div>
+    </div>
+  `).join('');
+}
 
 let highlightedLayer = null;
 const origEmissive = { skin: 0x8B6A00, pith: 0x000000, pulp: 0x8B5E00 };
 const hoverEmissive = { skin: 0xFFD700, pith: 0xCCCCCC, pulp: 0xFF8C00 };
 
 function showLayerProperties(layer) {
-  const data = LAYER_PROPERTIES[layer];
+  const data = LAYER_PROPS[layer];
   if (!data) return;
-
   highlightedLayer = layer;
 
   const panel = document.getElementById('layer-properties-panel');
   const hint = document.getElementById('layer-legend-hint');
   if (!panel) return;
-
   panel.style.display = 'block';
   if (hint) hint.style.display = 'none';
 
   document.getElementById('prop-color-dot').style.background = data.color;
+  document.getElementById('prop-color-dot').style.border = data.dotBorder || 'none';
   document.getElementById('prop-title').textContent = data.name;
   document.getElementById('prop-latin').textContent = data.latin;
-  document.getElementById('prop-composition').textContent = data.composition;
-  document.getElementById('prop-properties').textContent = data.properties;
-  document.getElementById('prop-uses').textContent = data.uses;
-  document.getElementById('prop-funfact').textContent = data.funfact;
 
-  const statsContainer = document.getElementById('prop-stats');
-  statsContainer.innerHTML = data.stats.map(s =>
-    `<div><div class="font-bold text-lg text-primary">${s.value}</div><div class="text-xs text-secondary">${s.label}</div></div>`
-  ).join('');
+  document.getElementById('prop-comp').innerHTML = renderPropCards(data.comp);
+  document.getElementById('prop-props').innerHTML = renderPropCards(data.props);
+  document.getElementById('prop-uses').innerHTML = renderUseTags(data.uses);
+  document.getElementById('prop-stats').innerHTML = renderStatCards(data.stats);
 
-  // Highlight the 3D layer
+  // Fun fact
+  const ff = data.fun;
+  document.getElementById('prop-fun').innerHTML = `<i class="fas ${ff.i}" style="color:${ff.c}"></i> ${ff.t}`;
+  document.getElementById('prop-fun').style.borderLeftColor = ff.c;
+
+  // Highlight 3D
   ['skin', 'pith', 'pulp'].forEach(k => {
     const m = parchita3dLayers[k];
     if (m && m.material) {
-      if (k === layer) {
-        m.material.emissive.setHex(hoverEmissive[k]);
-        m.material.emissiveIntensity = 0.4;
-      } else {
-        m.material.emissive.setHex(origEmissive[k]);
-        m.material.emissiveIntensity = 0.05;
-      }
+      m.material.emissive.setHex(k === layer ? hoverEmissive[k] : origEmissive[k]);
+      m.material.emissiveIntensity = k === layer ? 0.4 : 0.05;
     }
   });
 }
@@ -1807,13 +1892,8 @@ function hideLayerProperties() {
   if (panel) panel.style.display = 'none';
   if (hint) hint.style.display = 'grid';
   highlightedLayer = null;
-
-  // Reset emissive
   ['skin', 'pith', 'pulp'].forEach(k => {
     const m = parchita3dLayers[k];
-    if (m && m.material) {
-      m.material.emissive.setHex(origEmissive[k]);
-      m.material.emissiveIntensity = 0.05;
-    }
+    if (m && m.material) { m.material.emissive.setHex(origEmissive[k]); m.material.emissiveIntensity = 0.05; }
   });
 }

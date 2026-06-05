@@ -195,6 +195,57 @@ input.error, select.error { border-color: var(--danger) !important; box-shadow: 
 }
 .hover-ring { transition: 0.2s; }
 .hover-ring:hover { box-shadow: 0 0 0 2px var(--primary); transform: translateY(-1px); }
+
+/* ======================== PROPERTY CARDS ======================== */
+.prop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px;
+}
+.prop-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid;
+  transition: 0.2s;
+}
+.prop-card:hover { transform: translateY(-1px); }
+.prop-card-icon {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.prop-card-body { min-width: 0; line-height: 1.2; }
+.prop-card-label { font-size: 0.7rem; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prop-card-val { font-size: 0.6rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.use-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 14px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border: 1px solid;
+  transition: 0.2s;
+}
+.use-tag:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+.stat-card {
+  text-align: center;
+  padding: 10px 6px;
+  background: var(--primary-light);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.stat-card-icon { font-size: 1rem; color: var(--primary); margin-bottom: 2px; display: block; }
+.stat-card-val { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+.stat-card-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; }
 .card:hover { box-shadow: var(--shadow-md); }
 
 .tab-btn {
