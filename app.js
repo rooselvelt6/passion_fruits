@@ -1539,7 +1539,48 @@ function initParchita3D() {
       this.classList.toggle('active');
       const visible = this.classList.contains('active');
       if (parchita3dLayers[layer]) parchita3dLayers[layer].visible = visible;
+      if (visible) showLayerProperties(layer);
+      else {
+        const anyActive = document.querySelector('.layer-toggle.active');
+        if (anyActive) {
+          showLayerProperties(anyActive.dataset.layer);
+        } else {
+          hideLayerProperties();
+        }
+      }
     });
+  });
+
+  // Raycaster hover detection
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const canvas = parchita3dRenderer.domElement;
+  let hoveredLayer = null;
+
+  canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, parchita3dCamera);
+    const meshes = ['skin', 'pith', 'pulp'].map(k => parchita3dLayers[k]).filter(Boolean);
+    const intersects = raycaster.intersectObjects(meshes);
+
+    if (intersects.length > 0) {
+      const hit = intersects[0].object;
+      let foundLayer = null;
+      for (const k of ['skin', 'pith', 'pulp']) {
+        if (parchita3dLayers[k] === hit) { foundLayer = k; break; }
+      }
+      if (foundLayer) {
+        hoveredLayer = foundLayer;
+        canvas.style.cursor = 'pointer';
+        showLayerProperties(foundLayer);
+      }
+    } else {
+      hoveredLayer = null;
+      canvas.style.cursor = 'grab';
+    }
   });
 
   parchita3dInitialized = true;
@@ -1653,4 +1694,126 @@ function resetParchita3D() {
     if (!el.classList.contains('active')) { el.classList.add('active'); el.querySelector('input').checked = true; if (parchita3dLayers[el.dataset.layer]) parchita3dLayers[el.dataset.layer].visible = true; }
   });
   ['skin', 'pith', 'pulp', 'seeds'].forEach(k => { if (parchita3dLayers[k]) parchita3dLayers[k].position.y = 0; });
+}
+
+/* ======================== LAYER PROPERTIES ======================== */
+const LAYER_PROPERTIES = {
+  skin: {
+    name: 'Cáscara',
+    latin: 'Exocarpio · Passiflora edulis flavicarpa',
+    color: '#E8B830',
+    composition: 'Carotenoides (β-caroteno, licopeno), fibra dietética (28-35% base seca), pectina de bajo metoxilo, flavonoides, vitamina A y C.',
+    properties: 'Alta capacidad antioxidante, antiinflamatoria natural. La fibra insoluble representa el 60% del total, ideal para regular tránsito intestinal. PH ~4.5.',
+    uses: 'Harina de cáscara para panadería, colorante natural (curcumina), extracción de pectina para mermeladas, infusión digestiva, biocombustible.',
+    funfact: 'La cáscara representa ~45% del peso total del fruto. ¡Casi la mitad! Transformarla en harina reduce el desperdicio y genera un ingrediente rico en fibra.',
+    stats: [
+      { label: 'Peso del fruto', value: '45%' },
+      { label: 'Fibra dietética', value: '28-35%' },
+      { label: 'Antioxidantes', value: 'Alto' },
+    ]
+  },
+  pith: {
+    name: 'Blanco (Mesocarpio)',
+    latin: 'Mesocarpio · Capa interna esponjosa',
+    color: '#FFF8E7',
+    composition: 'Pectina de alto metoxilo (grado de esterificación >70%), celulosa, hemicelulosa, lignina, calcio, magnesio.',
+    properties: 'Poder gelificante excepcional: forma geles en presencia de azúcar y ácido (pH 2.8-3.5). Capacidad de retención de agua: 8-10x su peso seco.',
+    uses: 'Gelificante natural para mermeladas artesanales, espesante para salsas, agente de textura en repostería vegana, soporte para cultivo de hongos.',
+    funfact: 'La pectina del mesocarpio de parchita tiene un poder gelificante superior al de la manzana o los cítricos. ¡Es un gelificante de primera calidad!',
+    stats: [
+      { label: 'Grado esterif.', value: '>70%' },
+      { label: 'Ret. agua', value: '8-10x' },
+      { label: 'pH óptimo', value: '2.8-3.5' },
+    ]
+  },
+  pulp: {
+    name: 'Pulpa (Arilo)',
+    latin: 'Arilo · Jugo amarillo-naranja',
+    color: '#F5A623',
+    composition: 'Agua (82-85%), carbohidratos (12-15%), vitamina C (30mg/100g), fósforo, hierro, calcio, vitamina B3, β-criptoxantina.',
+    properties: '°Brix: 14-18 · pH: 2.8-3.2. Alto contenido de ácido cítrico y ascórbico. Perfil sensorial intenso: tropical, dulce-ácido, aromático.',
+    uses: 'Jugo concentrado, sirope artesanal (tu producto!), sorbetes, mermelada, vinagre tropical, cócteles, marinadas para carnes.',
+    funfact: 'El rendimiento de jugo es de ~35% del peso total del fruto. Una parchita de 70g rinde ~25ml de jugo puro — de ahí viene tu sirope.',
+    stats: [
+      { label: '°Brix', value: '14-18' },
+      { label: 'Vitamina C', value: '30mg/100g' },
+      { label: 'Rend. jugo', value: '~35%' },
+    ]
+  },
+  seeds: {
+    name: 'Semillas',
+    latin: 'Semillas · Aprox. 35 por fruto',
+    color: '#1A1A1A',
+    composition: 'Ácido linoleico (omega-6) 65-70%, ácido oleico 15-18%, proteína 18-22%, tocoferoles (vitamina E), fitoesteroles, polifenoles.',
+    properties: 'Aceite de semilla rico en ácidos grasos insaturados (85% del total). Alto poder antioxidante, emoliente, regenerador celular. Libre de transgénicos.',
+    uses: 'Aceite cosmético de lujo (antienvejecimiento), harina proteica para panadería, exfoliante natural, biocombustible de segunda generación.',
+    funfact: 'El aceite de semilla de parchita se vende en la industria cosmética hasta por $50 el litro. ¡Más rentable que el mismo jugo!',
+    stats: [
+      { label: 'Omega-6', value: '65-70%' },
+      { label: 'Proteína', value: '18-22%' },
+      { label: 'Aceite/fruto', value: '~2g' },
+    ]
+  }
+};
+
+let highlightedLayer = null;
+const origEmissive = { skin: 0x8B6A00, pith: 0x000000, pulp: 0x8B5E00 };
+const hoverEmissive = { skin: 0xFFD700, pith: 0xCCCCCC, pulp: 0xFF8C00 };
+
+function showLayerProperties(layer) {
+  const data = LAYER_PROPERTIES[layer];
+  if (!data) return;
+
+  highlightedLayer = layer;
+
+  const panel = document.getElementById('layer-properties-panel');
+  const hint = document.getElementById('layer-legend-hint');
+  if (!panel) return;
+
+  panel.style.display = 'block';
+  if (hint) hint.style.display = 'none';
+
+  document.getElementById('prop-color-dot').style.background = data.color;
+  document.getElementById('prop-title').textContent = data.name;
+  document.getElementById('prop-latin').textContent = data.latin;
+  document.getElementById('prop-composition').textContent = data.composition;
+  document.getElementById('prop-properties').textContent = data.properties;
+  document.getElementById('prop-uses').textContent = data.uses;
+  document.getElementById('prop-funfact').textContent = data.funfact;
+
+  const statsContainer = document.getElementById('prop-stats');
+  statsContainer.innerHTML = data.stats.map(s =>
+    `<div><div class="font-bold text-lg text-primary">${s.value}</div><div class="text-xs text-secondary">${s.label}</div></div>`
+  ).join('');
+
+  // Highlight the 3D layer
+  ['skin', 'pith', 'pulp'].forEach(k => {
+    const m = parchita3dLayers[k];
+    if (m && m.material) {
+      if (k === layer) {
+        m.material.emissive.setHex(hoverEmissive[k]);
+        m.material.emissiveIntensity = 0.4;
+      } else {
+        m.material.emissive.setHex(origEmissive[k]);
+        m.material.emissiveIntensity = 0.05;
+      }
+    }
+  });
+}
+
+function hideLayerProperties() {
+  const panel = document.getElementById('layer-properties-panel');
+  const hint = document.getElementById('layer-legend-hint');
+  if (panel) panel.style.display = 'none';
+  if (hint) hint.style.display = 'grid';
+  highlightedLayer = null;
+
+  // Reset emissive
+  ['skin', 'pith', 'pulp'].forEach(k => {
+    const m = parchita3dLayers[k];
+    if (m && m.material) {
+      m.material.emissive.setHex(origEmissive[k]);
+      m.material.emissiveIntensity = 0.05;
+    }
+  });
 }

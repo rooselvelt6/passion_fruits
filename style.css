@@ -193,6 +193,8 @@ input.error, select.error { border-color: var(--danger) !important; box-shadow: 
   opacity: 0.45;
   text-decoration: line-through;
 }
+.hover-ring { transition: 0.2s; }
+.hover-ring:hover { box-shadow: 0 0 0 2px var(--primary); transform: translateY(-1px); }
 .card:hover { box-shadow: var(--shadow-md); }
 
 .tab-btn {
